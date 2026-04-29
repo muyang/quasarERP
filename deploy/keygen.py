@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Quasar ERP — 授权注册机
-生成格式: QUASAR-XXXX-XXXX-XXXX-XXXX
-每次输入 1-10，生成对应数量的授权码
+Quasar ERP — 授权注册机 (命令行版)
+- CLI: keygen.py --generate-5000  (初始化 5000 个授权码)
+- CLI: keygen.py --check <key>    (验证授权码)
+- 交互式: python3 keygen.py       (输入 1-10 从可用池中随机抽取)
 """
 
 import random
 import os
-import hashlib
+import sys
+from datetime import datetime
 
-# 字符集: 排除易混淆字符 (0/O, 1/I/L)
 CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
 SEGMENTS = 4
 SEG_LEN = 4
@@ -18,104 +19,110 @@ LICENSE_FILE = os.path.join(LICENSE_DIR, "licenses.txt")
 BATCH_SIZE = 5000
 
 
-def generate_key():
-    """生成单个授权码"""
-    parts = []
-    for _ in range(SEGMENTS):
-        parts.append("".join(random.choices(CHARS, k=SEG_LEN)))
+def generate_raw_key():
+    parts = ["".join(random.choices(CHARS, k=SEG_LEN)) for _ in range(SEGMENTS)]
     return "QUASAR-" + "-".join(parts)
 
 
-def generate_batch(n):
-    """生成 n 个不重复的授权码"""
-    keys = set()
-    while len(keys) < n:
-        keys.add(generate_key())
-    return sorted(keys)
+def get_pool():
+    available, used = [], []
+    if not os.path.exists(LICENSE_FILE):
+        return available, used
+    with open(LICENSE_FILE) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split(",")
+            if len(parts) >= 2 and parts[1] == "available":
+                available.append(parts[0])
+            else:
+                used.append(line)
+    return available, used
+
+
+def save_pool(available, used):
+    with open(LICENSE_FILE, "w") as f:
+        for k in available:
+            f.write(f"{k},available\n")
+        for entry in used:
+            f.write(f"{entry}\n")
 
 
 def generate_5000():
-    """一次性生成 5000 个授权码，写回 licenses.txt 文件"""
-    print(f"正在生成 {BATCH_SIZE} 个授权码...")
-    keys = generate_batch(BATCH_SIZE)
+    print(f"Generating {BATCH_SIZE} license keys...")
+    keys = set()
+    while len(keys) < BATCH_SIZE:
+        keys.add(generate_raw_key())
     with open(LICENSE_FILE, "w") as f:
-        for k in keys:
-            f.write(k + "\n")
-    print(f"已完成: {BATCH_SIZE} 个授权码 → {LICENSE_FILE}")
+        for k in sorted(keys):
+            f.write(f"{k},available\n")
+    print(f"Done: {BATCH_SIZE} keys → {LICENSE_FILE}")
+
+
+def draw_from_pool(n):
+    """从可用池中随机抽取 n 个，标记为 assigned"""
+    available, used = get_pool()
+    if n > len(available):
+        return None, len(available)
+
+    chosen = random.sample(available, n)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    remain = [k for k in available if k not in chosen]
+    for key in chosen:
+        used.append(f"{key},assigned,{timestamp},cli-keygen")
+    save_pool(remain, used)
+    return chosen, len(remain)
 
 
 def interactive():
-    """交互式注册机: 输入 1-10 生成对应数量的授权码"""
+    available, used = get_pool()
     print("=" * 50)
-    print("  Quasar ERP 授权注册机")
+    print("  Quasar ERP 授权注册机 (CLI)")
     print("=" * 50)
-    print(f"  已有授权码: {_count_existing()} 个")
-    print("  输入 1-10 生成新授权码，输入 q 退出")
+    print(f"  可用授权: {len(available):,}  |  已用: {len(used):,}")
+    print("  输入 1-10 从可用池中抽取，输入 q 退出")
     print("=" * 50)
 
     while True:
         try:
-            cmd = input("\n请输入生成数量 (1-10): ").strip()
+            cmd = input("\nEnter count (1-10): ").strip()
             if cmd.lower() == "q":
-                print("退出注册机。")
                 break
             n = int(cmd)
             if n < 1 or n > 10:
-                print("请输入 1 到 10 之间的数字。")
+                print("Enter a number between 1 and 10.")
                 continue
 
-            keys = generate_batch(n)
-            with open(LICENSE_FILE, "a") as f:
-                for k in keys:
-                    f.write(k + "\n")
+            keys, remaining = draw_from_pool(n)
+            if keys is None:
+                print(f"Only {remaining} available — cannot generate {n}.")
+                continue
 
-            print(f"\n已生成 {n} 个授权码:")
-            for k in keys:
-                print(f"  {k}")
-            print(f"\n总计: {_count_existing()} 个授权码")
+            print(f"\nGenerated {n} key(s):")
+            for i, k in enumerate(keys, 1):
+                print(f"  [{i:02d}]  {k}")
+            print(f"\nRemaining: {remaining:,}")
 
         except ValueError:
-            print("输入无效，请输入数字 1-10 或 q 退出。")
+            print("Invalid input.")
         except KeyboardInterrupt:
-            print("\n退出注册机。")
             break
 
 
-def _count_existing():
-    if not os.path.exists(LICENSE_FILE):
-        return 0
-    with open(LICENSE_FILE) as f:
-        return sum(1 for _ in f)
-
-
-def validate_key(key):
-    """验证授权码是否在授权列表中"""
-    if not os.path.exists(LICENSE_FILE):
-        return False
-    key = key.strip().upper()
-    with open(LICENSE_FILE) as f:
-        for line in f:
-            if line.strip() == key:
-                return True
-    return False
-
-
 if __name__ == "__main__":
-    import sys
-
-    if len(sys.argv) > 1 and sys.argv[1] == "--generate-5000":
-        generate_5000()
-    elif len(sys.argv) > 1 and sys.argv[1] == "--check":
-        if len(sys.argv) > 2:
-            valid = validate_key(sys.argv[2])
-            print("VALID" if valid else "INVALID")
-            sys.exit(0 if valid else 1)
-        else:
-            print("Usage: keygen.py --check <license_key>")
-            sys.exit(1)
-    else:
-        # Auto-generate 5000 if no license file exists
-        if not os.path.exists(LICENSE_FILE) or _count_existing() < 5000:
-            print("首次运行，自动生成 5000 个授权码...")
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "--generate-5000":
             generate_5000()
+        elif sys.argv[1] == "--check" and len(sys.argv) > 2:
+            from license_validator import check_key
+            status = check_key(sys.argv[2])
+            print(status.upper())
+            sys.exit(0 if status == "available" else 1)
+        elif sys.argv[1] == "--gui":
+            from keygen_gui import main
+            main()
+        else:
+            print("Usage: keygen.py [--generate-5000 | --check <key> | --gui]")
+    else:
         interactive()

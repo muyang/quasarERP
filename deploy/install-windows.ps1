@@ -77,18 +77,31 @@ function Verify-License {
     Msg "license_title"
     $key = Read-Host "`n$(Msg 'license_prompt')"
 
-    if (-not (Test-Path $LicenseFile)) {
-        Write-Host "[ERROR] License file not found!" -ForegroundColor Red
-        pause; exit 1
-    }
-
-    $valid = Select-String -Path $LicenseFile -Pattern "^$key$" -SimpleMatch -Quiet
-    if ($valid) {
-        Msg "license_valid"
+    $ValidatorScript = Join-Path $ScriptDir "license_validator.py"
+    if (Test-Path $ValidatorScript) {
+        $result = & python3 $ValidatorScript $key 2>&1
+        if ($result -match "VALID") {
+            Msg "license_valid"
+        } else {
+            $reason = ($result -split '\|')[1]
+            Write-Host "[ERROR] $reason" -ForegroundColor Red
+            Msg "license_contact"
+            pause; exit 1
+        }
     } else {
-        Msg "license_invalid"
-        Msg "license_contact"
-        pause; exit 1
+        # Fallback
+        if (-not (Test-Path $LicenseFile)) {
+            Write-Host "[ERROR] License file not found!" -ForegroundColor Red
+            pause; exit 1
+        }
+        $valid = Select-String -Path $LicenseFile -Pattern "^$key," -SimpleMatch -Quiet
+        if ($valid) {
+            Msg "license_valid"
+        } else {
+            Msg "license_invalid"
+            Msg "license_contact"
+            pause; exit 1
+        }
     }
 }
 

@@ -123,16 +123,30 @@ verify_license() {
     echo ""
     read -p "$(msg "license_prompt")" input_key
 
-    if [ ! -f "$LICENSE_FILE" ]; then
-        echo -e "${RED}[✗] License file not found!${NC}"
+    VALIDATOR="${SCRIPT_DIR}/license_validator.py"
+    if [ ! -f "$VALIDATOR" ]; then
+        # Fallback: check against license file directly
+        if grep -qFx "${input_key}" "$LICENSE_FILE"; then
+            msg "license_valid"
+            echo ""
+            return
+        fi
+        msg "license_invalid"
+        msg "license_contact"
         exit 1
     fi
 
-    if grep -qFx "${input_key}" "$LICENSE_FILE"; then
+    result=$(python3 "$VALIDATOR" "${input_key}" 2>&1)
+    if echo "$result" | grep -q "VALID"; then
         msg "license_valid"
         echo ""
     else
-        msg "license_invalid"
+        reason=$(echo "$result" | cut -d'|' -f2)
+        if [ "$LANG" = "zh" ]; then
+            echo -e "${RED}[✗] ${reason}${NC}"
+        else
+            echo -e "${RED}[✗] ${reason}${NC}"
+        fi
         msg "license_contact"
         exit 1
     fi
