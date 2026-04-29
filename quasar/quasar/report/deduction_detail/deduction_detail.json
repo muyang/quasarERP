@@ -1,0 +1,97 @@
+{
+ "add_total_row": 1,
+ "columns": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "width": 120
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "width": 150
+  },
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "label": "Leave Type",
+   "options": "Leave Type",
+   "width": 120
+  },
+  {
+   "fieldname": "leave_application",
+   "fieldtype": "Link",
+   "label": "Leave Application",
+   "options": "Leave Application",
+   "width": 160
+  },
+  {
+   "fieldname": "leave_days",
+   "fieldtype": "Float",
+   "label": "Leave Days",
+   "width": 90
+  },
+  {
+   "fieldname": "deduction_rate",
+   "fieldtype": "Percent",
+   "label": "Deduction Rate",
+   "width": 90
+  },
+  {
+   "fieldname": "deduction_amount",
+   "fieldtype": "Currency",
+   "label": "Deduction Amount",
+   "width": 120
+  },
+  {
+   "fieldname": "payroll_month",
+   "fieldtype": "Date",
+   "label": "Payroll Month",
+   "width": 100
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "Remarks",
+   "width": 200
+  }
+ ],
+ "creation": "2026-04-29 00:00:00",
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "payroll_month",
+   "fieldtype": "Date",
+   "label": "Payroll Month",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 0
+  }
+ ],
+ "is_standard": "Yes",
+ "javascript": "quasar/report/deduction_detail/deduction_detail.js",
+ "modified": "2026-04-29 00:00:00",
+ "module": "Quasar",
+ "name": "Deduction Detail",
+ "owner": "Administrator",
+ "query": "quasar.quasar.report.deduction_detail.deduction_detail.get_data",
+ "ref_doctype": "Extra Deduction",
+ "report_name": "Deduction Detail",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ]
+}

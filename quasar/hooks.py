@@ -129,21 +129,36 @@ app_license = "mit"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Sales Order": "quasar.credit_control.QuasarSalesOrder"
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Purchase Order": {
+		"on_submit": "quasar.payment_plan.generate_payment_plans",
+		"on_cancel": "quasar.payment_plan.cancel_payment_plans",
+	},
+	"Work Order": {
+		"before_submit": "quasar.material_shortage.check_material_availability",
+	},
+	"Leave Application": {
+		"on_submit": "quasar.leave_deduction.create_extra_deduction",
+	},
+}
+
+doctype_js = {
+	"Material Shortage List": "public/js/material_shortage_list.js",
+}
+
+# Custom Fields (fixtures)
+# ------------------------
+fixtures = [
+	"Custom Field",
+]
 
 # Scheduled Tasks
 # ---------------

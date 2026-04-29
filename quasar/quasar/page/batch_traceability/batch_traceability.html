@@ -1,0 +1,110 @@
+<div class="container batch-traceability-page" style="padding: 20px;">
+	<!-- Search Bar -->
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="form-group">
+				<label>{{ __("批次号 / 序列号") }}</label>
+				<div class="input-group">
+					<input type="text"
+						data-fieldname="batch_no"
+						class="form-control"
+						placeholder="{{ __('输入批次号或扫描条码') }}"
+						autofocus />
+					<span class="input-group-btn">
+						<button class="btn btn-primary btn-search" onclick="search_batch(cur_page)">
+							{{ __("查询追溯") }}
+						</button>
+					</span>
+				</div>
+				<p class="help-block small text-muted">
+					{{ __("支持手动输入或扫码枪扫描批次号、序列号") }}
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Results Area -->
+	<div class="traceability-results"></div>
+</div>
+
+<style>
+.trace-timeline {
+	position: relative;
+	padding-left: 30px;
+	margin-top: 10px;
+}
+
+.trace-timeline::before {
+	content: "";
+	position: absolute;
+	left: 10px;
+	top: 0;
+	bottom: 0;
+	width: 2px;
+	background: #d1d8dd;
+}
+
+.timeline-item {
+	position: relative;
+	margin-bottom: 16px;
+	padding: 12px 16px;
+	background: #fff;
+	border: 1px solid #ebeff2;
+	border-radius: 6px;
+}
+
+.timeline-item::before {
+	content: "";
+	position: absolute;
+	left: -24px;
+	top: 14px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 2px solid #5e64ff;
+	background: #fff;
+}
+
+.timeline-item.upstream::before {
+	border-color: #4caf50;
+}
+
+.timeline-item.downstream::before {
+	border-color: #ff5722;
+}
+
+.timeline-item .timeline-header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 4px;
+}
+
+.timeline-item .timeline-body {
+	font-size: 13px;
+	color: #6c7680;
+}
+
+.timeline-item .timeline-date {
+	font-weight: 600;
+	color: #36414c;
+}
+
+.btn-search {
+	border-radius: 0 4px 4px 0;
+}
+</style>
+
+<script type="text/html" id="batch_traceability_item">
+	<div class="timeline-item {%= direction %}">
+		<div class="timeline-header">
+			<span class="timeline-date">{%= posting_date %}</span>
+			<span>
+				<a href="{%= voucher_url %}">{%= voucher_type %}: {%= voucher_no %}</a>
+			</span>
+		</div>
+		<div class="timeline-body">
+			<div>{%= item_code %} — {%= item_name || "" %}</div>
+			<div>{{ __("数量") }}: {%= actual_qty %} | {{ __("仓库") }}: {%= warehouse %}</div>
+		</div>
+	</div>
+</script>

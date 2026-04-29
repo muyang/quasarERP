@@ -1,0 +1,100 @@
+{
+ "add_total_row": 1,
+ "columns": [
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "供应商",
+   "options": "Supplier",
+   "width": 150
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "采购订单",
+   "options": "Purchase Order",
+   "width": 150
+  },
+  {
+   "fieldname": "planned_payment_date",
+   "fieldtype": "Date",
+   "label": "计划付款日期",
+   "width": 120
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "金额",
+   "width": 120
+  },
+  {
+   "fieldname": "days_until_due",
+   "fieldtype": "Int",
+   "label": "距今日天数",
+   "width": 100
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "状态",
+   "width": 100
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "备注",
+   "width": 250
+  }
+ ],
+ "creation": "2026-04-29 00:00:00",
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "days_ahead",
+   "fieldtype": "Int",
+   "label": "未来天数",
+   "default": "30",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "供应商",
+   "options": "Supplier",
+   "reqd": 0
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "开始日期",
+   "reqd": 0
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "结束日期",
+   "reqd": 0
+  }
+ ],
+ "is_standard": "Yes",
+ "javascript": "quasar/report/payable_forecast/payable_forecast.js",
+ "modified": "2026-04-29 00:00:00",
+ "module": "Quasar",
+ "name": "Payable Forecast",
+ "owner": "Administrator",
+ "query": "quasar.quasar.report.payable_forecast.payable_forecast.get_data",
+ "ref_doctype": "Payment Plan",
+ "report_name": "Payable Forecast",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Purchase Manager"
+  }
+ ]
+}
