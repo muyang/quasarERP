@@ -1,0 +1,97 @@
+供应商,Supplier
+采购订单,Purchase Order
+计划付款日期,Planned Payment Date
+金额,Amount
+距今日天数,Days Until Due
+状态,Status
+备注,Remarks
+未来天数,Days Ahead
+开始日期,Start Date
+结束日期,End Date
+应付金额,Payable Amount
+未知供应商,Unknown Supplier
+合计,Total
+应付账款未来 N 天预测报表,Payable Forecast Report
+物料不齐套，无法提交生产工单！,Material shortage — cannot submit Work Order!
+缺料清单已生成,Material Shortage List created
+请处理缺料后再提交，或在缺料清单中一键生成采购申请。,Resolve shortages before submitting, or generate Purchase Request from the Shortage List.
+物料不齐套,Material Shortage
+待处理,Pending
+采购申请已生成,Purchase Request Created
+已解决,Resolved
+生产工单,Work Order
+成品物料,Production Item
+缺料明细,Material Shortage Items
+物料编码,Item Code
+物料名称,Item Name
+仓库,Warehouse
+需求数量,Required Qty
+可用数量,Available Qty
+缺少数量,Shortage Qty
+建议供应商,Suggested Supplier
+采购申请,Purchase Request
+一键生成采购申请,Generate Purchase Request
+该缺料清单已处理，无法重复生成采购申请。,This shortage list has already been processed.
+所有物料已生成采购申请，无需重复操作。,All items have Purchase Requests already.
+由缺料清单 {0} (工单 {1}) 自动生成,Auto-generated from Shortage List {0} (Work Order {1})
+已生成采购申请,Generated Purchase Request
+已生成采购申请 <b>{0}</b>，包含 {1} 项缺料物料。,Generated Purchase Request <b>{0}</b> with {1} shortage items.
+批次追溯看板,Batch Traceability Dashboard
+查询追溯,Search Traceability
+导出 PDF,Export PDF
+提示,Notice
+请输入批次号,Please enter batch number
+未找到该批次的追溯记录,No traceability records found for this batch
+输入批次号或扫描条码,Enter batch number or scan barcode
+支持手动输入或扫码枪扫描批次号、序列号,Supports manual input or barcode scanner for batch/serial numbers
+向上追溯 — 来源,Upstream Trace — Source
+向下追溯 — 去向,Downstream Trace — Destination
+请先输入批次号,Please enter batch number first
+数量,Quantity
+采购收货,Purchase Receipt
+采购入库,Purchase Receipt
+委外入库,Subcontracting Receipt
+委外发料,Subcontracting Issue
+生产领料,Material Issue
+生产入库,Production Finished
+销售发货,Delivery Note
+库存调整,Stock Adjustment
+来源单据,Source Document
+去向单据,Destination Document
+Employee,Employee
+Employee Name,Employee Name
+Leave Application,Leave Application
+Leave Type,Leave Type
+Posting Date,Posting Date
+Payroll Month,Payroll Month
+Leave Days,Leave Days
+Deduction Rate (%),Deduction Rate (%)
+Deduction Amount,Deduction Amount
+Amended From,Amended From
+Remarks,Remarks
+Is Deductible,Is Deductible
+Deduction Rate,Deduction Rate
+Percentage of daily salary to deduct per leave day,Percentage of daily salary to deduct per leave day
+由请假单 {0} 自动生成,Auto-generated from Leave Application {0}
+扣款金额,Deduction Amount
+请假类型,Leave Type
+请假天数,Leave Days
+扣款比例,Deduction Rate
+扣款月,Payroll Month
+月度请假扣款明细报表,Monthly Leave Deduction Detail Report
+未知,Unknown
+超额度审批角色,Over-Credit Approval Role
+当销售订单超出信用额度时，拥有此角色的用户可直接提交审批,Users with this role can approve Sales Orders exceeding credit limits
+该客户信用额度已用完,This customer's credit limit has been reached
+超出信用额度,Over Credit Limit
+您没有超额度审批权限，请联系拥有,You do not have over-credit approval permission. Contact
+角色的用户审批。,role user for approval.
+客户应收账款已达信用额度的,AR balance has reached
+请关注。,of credit limit. Please review.
+Supplier,Supplier
+Purchase Order,Purchase Order
+Company,Company
+Item,Item
+Warehouse,Warehouse
+Material Request,Material Request
+Work Order,Work Order
